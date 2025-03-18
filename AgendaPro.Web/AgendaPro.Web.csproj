@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>aspnet-AgendaPro.Web-bce6c437-0eca-4996-ab20-3ec074f9a5e5</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\AgendaPro.Domain\AgendaPro.Domain.csproj" />
+      <ProjectReference Include="..\AgendaPro.Infrastructure\AgendaPro.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.3">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+    </ItemGroup>
+
+</Project>
