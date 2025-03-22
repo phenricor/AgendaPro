@@ -1,0 +1,41 @@
+@model CreateCustomerRequest
+
+@await Html.PartialAsync("_ValidationScriptsPartial")
+<form id="createCustomerForm">
+<div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">New Customer</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                    <div class="form-group mb-3">
+                        <label for="name">Name</label>
+                        <input id="name" type="text" asp-for="Name" class="form-control" required>
+                        <span asp-validation-for="Name" class="text-danger" id="nameValidation"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="name">Email</label>
+                        <input id="email" type="text" asp-for="Email" class="form-control" required>
+                        <span asp-validation-for="Email" class="text-danger" id="emailValidation"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="name">Cnpj</label>
+                        <input id="cnpj" type="text" asp-for="Cnpj" required class="form-control">
+                        <span asp-validation-for="Cnpj" class="text-danger" id="cnpjValidation"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="name">Phone</label>
+                        <input id="phone" type="text" asp-for="Phone" required class="form-control">
+                        <span asp-validation-for="Phone" class="text-danger" id="phoneValidation"></span>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button class="btn btn-primary" type="submit">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+</form>

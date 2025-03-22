@@ -1,0 +1,30 @@
+@model List<AgendaPro.Web.Models.Customer.CustomerModel> 
+@if (Model.Any())
+{
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Cnpj</th>
+        <th scope="col">Phone</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var customer in Model)
+    {
+        <tr>
+            <td>@customer.Name</td>
+            <td>@customer.Email</td>
+            <td>@customer.Cnpj</td>
+            <td>@customer.Phone</td>
+        </tr>
+    }
+    </tbody>
+</table>
+}
+else
+{
+    <p>No customers found</p>
+}
+
