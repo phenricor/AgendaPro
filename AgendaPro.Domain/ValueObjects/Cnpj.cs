@@ -1,25 +1,28 @@
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using AgendaPro.Domain.Shared;
 
 namespace AgendaPro.Domain.ValueObjects;
 
+[ComplexType]
 public record Cnpj
 {
-    public string Value { get; set; }
+    public string Value { get; private set; }
+    protected Cnpj() {}
     private Cnpj(string value)
     {
         Value = value;
     }
-
     public static Result<Cnpj> Create(string value)
     {
-        if (!IsValid(value))
+        if (Validate(value).IsFailure)
         {
-            return Result<Cnpj>.Failure(CustomerErrors.CnpjInvalid);
+            return Result<Cnpj>.Failure(Validate(value).Error);
         }
-        return Result<Cnpj>.Success(new Cnpj(value));
+        return Result<Cnpj>.Success(new(value));
     }
-
-    private static bool IsValid(string value)
+    private static Result<bool> Validate(string value)
     {
         int[] multiplicador1 = [5,4,3,2,9,8,7,6,5,4,3,2];
         int[] multiplicador2 = [6,5,4,3,2,9,8,7,6,5,4,3,2];
@@ -28,7 +31,7 @@ public record Cnpj
         cnpj = cnpj.Replace(".", "").Replace("-", "").Replace("/", "");
 
         if (cnpj.Length != 14)
-            return false;
+            return Result<bool>.Failure(CustomerErrors.CnpjInvalid);
 
         var tempCnpj = cnpj.Substring(0, 12);
 
@@ -57,7 +60,11 @@ public record Cnpj
 
         digito = digito + resto.ToString();
 
-        return cnpj.EndsWith(digito);
+        if (!cnpj.EndsWith(digito))
+        {
+            return Result<bool>.Failure(CustomerErrors.CnpjInvalid);
+        }
+        return Result<bool>.Success(true);
     }
     public override string ToString()
     {

@@ -7,7 +7,6 @@ public class ApplicationDbContext : IdentityDbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) {}
     DbSet<Customer> Customers { get; set; }
-    DbSet<Availability> Availabilities { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

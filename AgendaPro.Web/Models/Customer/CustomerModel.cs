@@ -15,8 +15,8 @@ public class CustomerModel
             Id = customer.Id,
             Name = customer.Name,
             Email = customer.Email,
-            Cnpj = customer.Cnpj.ToString(),
-            Phone = customer.Phone,
+            Cnpj = customer.Cnpj.Value,
+            Phone = customer.Phone.Value
         };
         return customerModel;
     }
