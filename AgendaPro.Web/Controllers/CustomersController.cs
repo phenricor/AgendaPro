@@ -43,7 +43,10 @@ public class CustomersController : Controller
     {
         if (!ModelState.IsValid)
         {
-            var error = ModelState.Values.SelectMany(v => v.Errors).FirstOrDefault();
+            var error = String.Join(", ", ModelState.Values
+                .SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList());
             return Json(new { success = false, errorMessage = error });
         }
         var validation = _customerService.ValidateFields(request);
@@ -85,8 +88,7 @@ public class CustomersController : Controller
     
     public async Task<IActionResult> Edit(Guid id)
     {
-        var customer = await _customerService.FindCustomer(id);
-        var viewModel = new EditCustomerRequest().FromModel(customer);
+        var viewModel = await _customerService.ReturnEditCustomerRequest(id);
         if (viewModel.IsFailure)
         {
             return BadRequest(viewModel.Error.Description);
@@ -106,7 +108,11 @@ public class CustomersController : Controller
             return Json(new { success = false, errorMessage = error });
         }
         var customer = await _customerService.FindCustomer(request.Id);
-        var validation = _customerService.ValidateFields(request, customer);
+        if (customer.IsFailure)
+        {
+            return Json(new { success = false, error = customer.Error.Description });
+        }
+        var validation = _customerService.ValidateFields(request, customer.Value);
         if (validation.Result.IsFailure)
         {
             return Json(new
@@ -116,14 +122,14 @@ public class CustomersController : Controller
                 field = validation.Result.Error.FieldValidation
             });
         }
-        var mappedCustomer = request.MapValues(customer);
+        var mappedCustomer = request.MapValues(customer.Value);
         if (mappedCustomer.IsFailure)
         {
             return Json(new
             {
                 success = false,
-                error = validation.Result.Error.Description,
-                field = validation.Result.Error.FieldValidation
+                error = mappedCustomer.Error.Description,
+                field = mappedCustomer.Error.FieldValidation
             });
         }
         await _customerService.UpdateCustomer(mappedCustomer.Value);

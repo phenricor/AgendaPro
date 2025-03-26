@@ -99,7 +99,7 @@ function SendCreateRequest(modal)
 }
 function SendUpdateRequest(modal)
 {
-    const FORM = $("#createCustomerForm");
+    const FORM = $("#editCustomerForm");
     FORM.submit(function (event) {
         event.preventDefault();
         if ($(this).valid())

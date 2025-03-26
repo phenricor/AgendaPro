@@ -16,7 +16,7 @@ public class EditCustomerRequest
     [MinLength(10)]
     public string Cnpj { get; set; }
     [Required]
-    [MinLength(8)]
+    [MinLength(8, ErrorMessage = "Phone number must have at least 8 characters")]
     public string Phone { get; set; }
 
     public Result<EditCustomerRequest> FromModel(Domain.Entities.Customer? customer)
@@ -41,11 +41,11 @@ public class EditCustomerRequest
         {
             return Result<Domain.Entities.Customer>.Failure(CustomerErrors.CustomerDoesNotExist);
         }
-        if (Domain.Entities.Customer.Validate(Cnpj, Phone).IsFailure)
+        var updateProperties = model.UpdateProperties(Name, Email, Cnpj, Phone);
+        if (updateProperties.IsFailure || updateProperties.Value == null)
         {
-            return Result<Domain.Entities.Customer>.Failure(Domain.Entities.Customer.Validate(Cnpj, Phone).Error);
+            return Result<Domain.Entities.Customer>.Failure(updateProperties.Error);
         }
-        model.Update(Name, Email, Cnpj, Phone);
-        return Result<Domain.Entities.Customer>.Success(model);
+        return Result<Domain.Entities.Customer>.Success(updateProperties.Value);
     }
 }

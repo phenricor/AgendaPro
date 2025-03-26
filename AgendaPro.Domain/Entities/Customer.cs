@@ -19,41 +19,43 @@ public class Customer
         Cnpj = cnpj;
         Phone = phone;
     }
-    public static Result<Customer> Create(string name, string email, string cnpj, string phone)
+    public static Result<Customer> Create(string name, string email, string? cnpj, string? phone)
     {
         var validation = Validate(cnpj, phone);
         if (validation.IsFailure)
         {
             return Result<Customer>.Failure(validation.Error);
         }
-        if (validation.Value == null)
-        {
-            return Result<Customer>.Failure(CustomerErrors.CustomerDoesNotExist);
-        }
-        var customer = validation.Value;
-        customer.Name = FormatName(name);
-        customer.Email = email;
-        return Result<Customer>.Success(customer);
-    }
 
-    public static Result<Customer> Validate(string cnpj, string phone)
-    {
-        var cnpjResult = ValueObjects.Cnpj.Create(cnpj);
-        var phoneResult = ValueObjects.Phone.Create(phone);
-        if (cnpjResult.IsFailure)
+        var cnpjObj = Cnpj.Create(cnpj);
+        var phoneObj = Phone.Create(phone);
+        if (cnpjObj.IsFailure || phoneObj.IsFailure)
         {
-            return Result<Customer>.Failure(cnpjResult.Error);
-        }
-        if (phoneResult.IsFailure)
-        {
-            return Result<Customer>.Failure(phoneResult.Error);
+            return Result<Customer>.Failure(CustomerErrors.CnpjInvalid);
         }
         var customer = new Customer()
         {
-            Cnpj = cnpjResult.Value, 
-            Phone = phoneResult.Value
+            Name = FormatName(name),
+            Email = email,
+            Cnpj = cnpjObj.Value,
+            Phone = phoneObj.Value
         };
         return Result<Customer>.Success(customer);
+    }
+
+    private static Result<bool> Validate(string? cnpj, string? phone)
+    {
+        var cnpjResult = Cnpj.Validate(cnpj);
+        var phoneResult = Phone.Validate(phone);
+        if (cnpjResult.IsFailure)
+        {
+            return Result<bool>.Failure(cnpjResult.Error);
+        }
+        if (phoneResult.IsFailure)
+        {
+            return Result<bool>.Failure(phoneResult.Error);
+        }
+        return Result<bool>.Success(true);
     }
 
     private static string FormatName(string name)
@@ -65,7 +67,7 @@ public class Customer
         return name;
     }
 
-    public Result<Customer> Update(string name, string email, string cnpj, string phone)
+    public Result<Customer> UpdateProperties(string name, string email, string cnpj, string phone)
     {
         var validation = Validate(cnpj, phone);
         if (validation.IsFailure)
@@ -74,8 +76,8 @@ public class Customer
         }
         Name = FormatName(name);
         Email = email;
-        Cnpj = validation.Value.Cnpj;
-        Phone = validation.Value.Phone;
+        Cnpj = Cnpj.Create(cnpj).Value;
+        Phone = Phone.Create(phone).Value;
         return Result<Customer>.Success(this);
     }
 }

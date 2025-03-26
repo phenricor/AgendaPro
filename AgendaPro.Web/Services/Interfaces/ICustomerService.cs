@@ -9,11 +9,12 @@ namespace AgendaPro.Web.Services.Interfaces;
 
 public interface ICustomerService
 {
-    public Task<Customer?> FindCustomer(Guid customerId);
+    public Task<Result<Customer>> FindCustomer(Guid customerId);
     public Task AddCustomer(Customer customer);
     public Task UpdateCustomer(Customer? customer);
     public IPagedList<CustomerModel> ReturnPaginatedViewModel(int pageIndex, int pageSize);
     public Task<Result<bool>> RemoveCustomer(Guid customerId);
     public Task<Result<bool>> ValidateFields(CreateCustomerRequest request);
     public Task<Result<bool>> ValidateFields(EditCustomerRequest request, Customer? customer);
+    public Task<Result<EditCustomerRequest>> ReturnEditCustomerRequest(Guid customerId);
 }

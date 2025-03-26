@@ -1,10 +1,12 @@
 using AgendaPro.Domain.Entities;
+using AgendaPro.Domain.Interfaces;
 using AgendaPro.Domain.Shared;
 using AgendaPro.Infrastructure.Repositories;
 using AgendaPro.Web.Controllers;
 using AgendaPro.Web.Models;
 using AgendaPro.Web.Models.Customer;
 using AgendaPro.Web.Services.Interfaces;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using X.PagedList;
@@ -14,17 +16,45 @@ namespace AgendaPro.Web.Services;
 
 public class CustomerService : ICustomerService
 {
-    private readonly CustomerRepository _customerRepository;
-    private ICustomerService _customerServiceImplementation;
+    private readonly ICustomerRepository _customerRepository;
+    private readonly ILogger<CustomerService> _logger;
 
-    public CustomerService(CustomerRepository customerRepository)
+    public CustomerService(ICustomerRepository customerRepository, ILogger<CustomerService> logger)
     {
         _customerRepository = customerRepository;
+        _logger = logger;
     }
-    public async Task<Customer?> FindCustomer(Guid customerId)
+    public async Task<Result<Customer>> FindCustomer(Guid customerId)
     {
+        if (customerId == Guid.Empty)
+        {
+            return Result<Customer>.Failure(CustomerErrors.CustomerDoesNotExist);
+        }
         var customer = await _customerRepository.GetByIdAsync(customerId);
-        return customer;
+        if (customer == null)
+        {
+            return Result<Customer>.Failure(CustomerErrors.CustomerDoesNotExist);
+        }
+        return Result<Customer>.Success(customer);
+    }
+
+    public async Task<Result<EditCustomerRequest>> ReturnEditCustomerRequest(Guid customerId)
+    {
+        if (customerId == Guid.Empty)
+        {
+            return Result<EditCustomerRequest>.Failure(CustomerErrors.CustomerDoesNotExist);
+        }
+        var customer = await _customerRepository.GetByIdAsync(customerId);
+        if (customer == null)
+        {
+            return Result<EditCustomerRequest>.Failure(CustomerErrors.CustomerDoesNotExist);
+        }
+        var viewModel = new EditCustomerRequest().FromModel(customer);
+        if (viewModel.IsFailure || viewModel.Value == null)
+        {
+            return Result<EditCustomerRequest>.Failure(viewModel.Error);
+        }
+        return Result<EditCustomerRequest>.Success(viewModel.Value);
     }
     public async Task AddCustomer(Customer customer)
     {
@@ -96,11 +126,11 @@ public class CustomerService : ICustomerService
         return Result<bool>.Success(true);
     }
 
-    private async Task<bool> CnpjAlreadyExists(string cnpj)
+    private async Task<bool> CnpjAlreadyExists(string? cnpj)
     {
         return await _customerRepository.FindByCnpj(cnpj) != null;
     }
-    private async Task<bool> PhoneAlreadyExists(string phone)
+    private async Task<bool> PhoneAlreadyExists(string? phone)
     {
         return await _customerRepository.FindByPhone(phone) != null;
     }

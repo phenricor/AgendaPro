@@ -6,35 +6,35 @@ namespace AgendaPro.Infrastructure.Repositories;
 
 public class BaseRepository<T> : IBaseRepository<T> where T : class
 {
-    protected readonly ApplicationDbContext _context;
-    protected readonly DbSet<T> _dbSet;
+    protected readonly ApplicationDbContext Context;
+    protected readonly DbSet<T> DbSet;
 
     public BaseRepository(ApplicationDbContext context)
     {
-        _context = context;
-        _dbSet = context.Set<T>();
+        Context = context;
+        DbSet = context.Set<T>();
     }
 
-    public async Task<T?> GetByIdAsync(Guid id) => await _dbSet.FindAsync(id);
+    public async Task<T?> GetByIdAsync(Guid id) => await DbSet.FindAsync(id);
 
-    public async Task<List<T>> GetAllAsync() => await _dbSet.ToListAsync();
+    public async Task<List<T>> GetAllAsync() => await DbSet.ToListAsync();
 
     public async Task AddAsync(T entity)
     {
-        var savedEntity = await _dbSet.AddAsync(entity);
-        await _context.SaveChangesAsync();
+        var savedEntity = await DbSet.AddAsync(entity);
+        await Context.SaveChangesAsync();
     }
 
     public async Task UpdateAsync(T entity)
     {
-        _dbSet.Update(entity);
-        await _context.SaveChangesAsync();
+        DbSet.Update(entity);
+        await Context.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(Guid id)
     {
-        var entity = await _dbSet.FindAsync(id);
-        _context.Remove(entity);
-        await _context.SaveChangesAsync();
+        var entity = await DbSet.FindAsync(id);
+        Context.Remove(entity);
+        await Context.SaveChangesAsync();
     }
 }

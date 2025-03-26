@@ -7,29 +7,29 @@ using SQLitePCL;
 
 namespace AgendaPro.Infrastructure.Repositories;
 
-public class CustomerRepository : BaseRepository<Customer>
+public class CustomerRepository : BaseRepository<Customer>, ICustomerRepository
 {
     public CustomerRepository(ApplicationDbContext context) : base(context) {}
     public List<Customer> GetCustomersList()
     {
-        return _dbSet.ToList();
+        return DbSet.ToList();
     }
     public IQueryable<Customer> GetCustomersQueryable()
     {
-        return _dbSet.AsNoTracking();
+        return DbSet.AsNoTracking();
     }
-    public async Task<Customer?> FindByCnpj(string cnpj)
+    public async Task<Customer?> FindByCnpj(string? cnpj)
     {
-        return await _dbSet.FirstOrDefaultAsync(x => x.Cnpj.Value == cnpj);
+        return await DbSet.FirstOrDefaultAsync(x => x.Cnpj.Value == cnpj);
     }
     
-    public async Task<Customer?> FindByPhone(string phone)
+    public async Task<Customer?> FindByPhone(string? phone)
     {
-        return await _dbSet.FirstOrDefaultAsync(x => x.Phone.Value == phone);
+        return await DbSet.FirstOrDefaultAsync(x => x.Phone.Value == phone);
     }
 
     public async Task<Customer?> FindByEmail(string email)
     {
-        return await _dbSet.FirstOrDefaultAsync(x => x.Email == email);
+        return await DbSet.FirstOrDefaultAsync(x => x.Email == email);
     }
 }

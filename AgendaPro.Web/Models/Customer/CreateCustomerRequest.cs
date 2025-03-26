@@ -15,10 +15,10 @@ public class CreateCustomerRequest
     public string Email { get; set; }
     [Required]
     [MinLength(10)]
-    public string Cnpj { get; set; }
+    public string? Cnpj { get; set; }
     [Required]
     [MinLength(8)]
-    public string Phone { get; set; }
+    public string? Phone { get; set; }
 
     public Result<Domain.Entities.Customer> ToModel()
     {

@@ -1,5 +1,3 @@
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using AgendaPro.Domain.Shared;
 
@@ -8,22 +6,31 @@ namespace AgendaPro.Domain.ValueObjects;
 [ComplexType]
 public record Cnpj
 {
-    public string Value { get; private set; }
+    public string? Value { get; private set; }
     protected Cnpj() {}
-    private Cnpj(string value)
+    private Cnpj(string? value)
     {
         Value = value;
     }
-    public static Result<Cnpj> Create(string value)
+    public static Result<Cnpj> Create(string? value)
     {
         if (Validate(value).IsFailure)
         {
-            return Result<Cnpj>.Failure(Validate(value).Error);
+            return Result<Cnpj>.Failure(CustomerErrors.CnpjInvalid);
+        }
+
+        if (value == null)
+        {
+            return Result<Cnpj>.Failure(CustomerErrors.CnpjInvalid);
         }
         return Result<Cnpj>.Success(new(value));
     }
-    private static Result<bool> Validate(string value)
+    public static Result<bool> Validate(string value)
     {
+        if (value == null)
+        {
+            return Result<bool>.Failure(CustomerErrors.CnpjInvalid);
+        }
         int[] multiplicador1 = [5,4,3,2,9,8,7,6,5,4,3,2];
         int[] multiplicador2 = [6,5,4,3,2,9,8,7,6,5,4,3,2];
 
@@ -66,7 +73,7 @@ public record Cnpj
         }
         return Result<bool>.Success(true);
     }
-    public override string ToString()
+    public override string? ToString()
     {
         return Value;
     }
