@@ -17,12 +17,31 @@ namespace AgendaPro.Web.Services;
 public class CustomerService : ICustomerService
 {
     private readonly ICustomerRepository _customerRepository;
+    private readonly IAvailableBlockRepository _availableBlockRepository;
     private readonly ILogger<CustomerService> _logger;
 
-    public CustomerService(ICustomerRepository customerRepository, ILogger<CustomerService> logger)
+    public CustomerService(
+        ICustomerRepository customerRepository, 
+        IAvailableBlockRepository availableBlockRepository,
+        ILogger<CustomerService> logger)
     {
         _customerRepository = customerRepository;
+        _availableBlockRepository = availableBlockRepository;
         _logger = logger;
+    }
+
+    public async Task<Result<Customer?>> GetCustomer(Guid customerId)
+    {
+        if (customerId == Guid.Empty)
+        {
+            return Result<Customer?>.Failure(CustomerErrors.CustomerDoesNotExist);
+        }
+        var customer = await _customerRepository.GetByIdAsync(customerId);
+        if (customer == null)
+        {
+            return Result<Customer?>.Failure(CustomerErrors.CustomerDoesNotExist);
+        }
+        return Result<Customer?>.Success(customer);
     }
     public async Task<Result<Customer>> FindCustomer(Guid customerId)
     {
@@ -124,6 +143,22 @@ public class CustomerService : ICustomerService
             return Result<bool>.Failure(CustomerErrors.EmailAlreadyUsed);
         }
         return Result<bool>.Success(true);
+    }
+
+    public async Task<Result<AvailableBlock>> AddAvailableBlock(Guid customerId, DateTime startDate, DateTime endDate)
+    {
+        var customer = await GetCustomer(customerId);
+        if (customer.IsFailure)
+        {
+            return Result<AvailableBlock>.Failure(CustomerErrors.CustomerDoesNotExist);
+        }
+        var availabilyBlock = AvailableBlock.Create(startDate, endDate, customerId);
+        if (availabilyBlock.IsFailure)
+        {
+            return Result<AvailableBlock>.Failure(availabilyBlock.Error);
+        }
+        await _availableBlockRepository.AddAsync(availabilyBlock.Value);
+        return Result<AvailableBlock>.Success(availabilyBlock.Value);
     }
 
     private async Task<bool> CnpjAlreadyExists(string? cnpj)

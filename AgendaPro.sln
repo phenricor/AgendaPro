@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgendaPro.Domain", "AgendaP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgendaPro.Infrastructure", "AgendaPro.Infrastructure\AgendaPro.Infrastructure.csproj", "{E475A8BC-105D-4EB6-996D-1A9BCFE11913}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgendaPro.Tests", "AgendaPro.Tests\AgendaPro.Tests.csproj", "{B7BAD9EC-A3BC-440C-BC2E-EE0001D7B7B2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{E475A8BC-105D-4EB6-996D-1A9BCFE11913}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E475A8BC-105D-4EB6-996D-1A9BCFE11913}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E475A8BC-105D-4EB6-996D-1A9BCFE11913}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7BAD9EC-A3BC-440C-BC2E-EE0001D7B7B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7BAD9EC-A3BC-440C-BC2E-EE0001D7B7B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7BAD9EC-A3BC-440C-BC2E-EE0001D7B7B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7BAD9EC-A3BC-440C-BC2E-EE0001D7B7B2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

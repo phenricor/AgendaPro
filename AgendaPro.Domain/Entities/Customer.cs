@@ -6,11 +6,12 @@ namespace AgendaPro.Domain.Entities;
 
 public class Customer
 {
-    public Guid Id { get; private set; }
+    public Guid Id { get; set; }
     public string Name { get; private set; }
     public string Email { get; private set; }
     public Cnpj Cnpj { get; private set; }
     public Phone Phone { get; private set; }
+    public ICollection<AvailableBlock?> AvailableBlocks { get; private set; } = new List<AvailableBlock>();
     protected Customer(){}
     private Customer(string name, string email, Cnpj cnpj, Phone phone)
     {
@@ -80,4 +81,27 @@ public class Customer
         Phone = Phone.Create(phone).Value;
         return Result<Customer>.Success(this);
     }
+
+    public Result<AvailableBlock> AddAvailableBlock(DateTime startDate, DateTime endDate)
+    {
+        var availability = AvailableBlock.Create(startDate, endDate, Id);
+        if (availability.IsFailure)
+        {
+            return Result<AvailableBlock>.Failure(availability.Error);
+        }
+        AvailableBlocks.Add(availability.Value);
+        return Result<AvailableBlock>.Success(availability.Value);
+    }
+
+    public bool IsAvailableAt(DateTime startDate, DateTime endDate)
+    {
+        if (!AvailableBlocks.Any())
+        {
+            return true;
+        }
+        var isBlocked = AvailableBlocks
+            .Any(x => x != null && startDate < x.EndDate && endDate > x.StartDate);
+        return !isBlocked;
+    }
+    public bool IsBlockedAt(DateTime startDate, DateTime endDate) => !IsAvailableAt(startDate, endDate);
 }
