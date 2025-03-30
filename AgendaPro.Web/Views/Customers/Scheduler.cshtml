@@ -5,41 +5,46 @@
     Layout = "_Layout";
 }
 @await Html.PartialAsync("_Toast")
-<div class="container d-flex justify-content-center align-items-center w-50">
-    <form class="form-signin" asp-action="Schedule" method="post">
-        <div class="text-center mb-4">
-            <h1 class="h3 mb-3 font-weight-normal">
-                <i class="fa-solid fa-calendar fa-xl" style="color: #74C0FC;"></i>
-                Schedule Manager
-            </h1>
-            <p>Check if the service is available and schedule.</p>
-        </div>
-        @if (Model != null)
-        {
-        <div class="form-label-group mb-2">
-            <label for="customer">Select the service</label>
-            <select id="customer" class="form-select">
-                @foreach (var customer in @Model)
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 d-flex justify-content-center align-items-center">
+            <form asp-action="Schedule" method="post">
+                <div class="text-center mb-4">
+                    <h1 class="h3 mb-3 font-weight-normal">
+                        <i class="fa-solid fa-calendar fa-xl" style="color: #74C0FC;"></i>
+                        Schedule Manager
+                    </h1>
+                    <p>Check if the service is available and schedule.</p>
+                </div>
+                @if (Model != null)
                 {
-                    <option class="customerOption" data-id="@customer.Id">@customer.Name</option>
+                    <div class="form-label-group mb-2">
+                        <label for="customer">Select a service</label>
+                        <select id="customer" class="form-select">
+                            @foreach (var customer in @Model)
+                            {
+                                <option class="customerOption" data-id="@customer.Id">@customer.Name</option>
+                            }
+                        </select>
+                        <div id="formDiv"></div>
+                    </div>
                 }
-            </select>
-            <div id="formDiv"></div>
+                else
+                {
+                    <p>
+                        No customer registered. Please
+                        <a asp-action="Index">add a new customer</a>
+                        to schedule a service.
+                    </p>
+                }
+            </form>
         </div>
-        }
-        else
-        {
-            <p>
-                No customer registered. Please 
-                <a asp-action="Index">add a new customer</a>
-                 to continue
-            </p>
-        }
-    </form>
+        <div class="col-md-8">
+            <div id="calendar"></div>
+        </div>
+    </div>
 </div>
-<div class="container my-2">
-    <div id="calendar"></div>
-</div>
+
 @section Scripts
 {
     @await Html.PartialAsync("_Calendar")
