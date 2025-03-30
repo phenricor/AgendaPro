@@ -1,0 +1,22 @@
+@using System.Globalization
+@using Microsoft.EntityFrameworkCore.Storage.ValueConversion
+@model AgendaPro.Web.Models.Customer.CustomerScheduleRequest
+@await Html.PartialAsync("_ValidationScriptsPartial")
+<form id="scheduleForm">
+    <div class="form-label-group mb-2">
+        <label for="date">Date</label>
+        <input type="date" id="date" class="form-control" asp-for="Date">
+        <span asp-validation-for="Date" class="text-danger"></span>
+    </div>
+    <div class="form-label-group mb-2">
+        <label for="startTime">Start</label>
+        <input type="time" id="startTime" class="form-control" asp-for="StartTime">
+        <span asp-validation-for="StartTime" class="text-danger"></span>
+    </div>
+    <div class="form-label-group mb-2">
+        <label for="endTime">End</label>
+        <input type="time" id="endTime" class="form-control" asp-for="EndTime">
+        <span asp-validation-for="EndTime" class="text-danger"></span>
+    </div>
+    <button class="btn btn-primary" type="submit" id="submitForm">Schedule it</button>
+</form>

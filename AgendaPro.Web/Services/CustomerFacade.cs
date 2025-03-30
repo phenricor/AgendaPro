@@ -14,16 +14,16 @@ using X.PagedList.Extensions;
 
 namespace AgendaPro.Web.Services;
 
-public class CustomerService : ICustomerService
+public class CustomerFacade : ICustomerFacade
 {
     private readonly ICustomerRepository _customerRepository;
     private readonly IAvailableBlockRepository _availableBlockRepository;
-    private readonly ILogger<CustomerService> _logger;
+    private readonly ILogger<CustomerFacade> _logger;
 
-    public CustomerService(
+    public CustomerFacade(
         ICustomerRepository customerRepository, 
         IAvailableBlockRepository availableBlockRepository,
-        ILogger<CustomerService> logger)
+        ILogger<CustomerFacade> logger)
     {
         _customerRepository = customerRepository;
         _availableBlockRepository = availableBlockRepository;
@@ -55,6 +55,17 @@ public class CustomerService : ICustomerService
             return Result<Customer>.Failure(CustomerErrors.CustomerDoesNotExist);
         }
         return Result<Customer>.Success(customer);
+    }
+
+    public async Task<Result<List<Customer>>> GetAllCustomers()
+    {
+        var customers = await _customerRepository.GetAllAsync();
+        if (!customers.Any())
+        {
+            return Result<List<Customer>>.Failure(CustomerErrors.CustomerDoesNotExist);
+        }
+
+        return Result<List<Customer>>.Success(customers);
     }
 
     public async Task<Result<EditCustomerRequest>> ReturnEditCustomerRequest(Guid customerId)

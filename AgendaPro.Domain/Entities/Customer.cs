@@ -11,7 +11,7 @@ public class Customer
     public string Email { get; private set; }
     public Cnpj Cnpj { get; private set; }
     public Phone Phone { get; private set; }
-    public ICollection<AvailableBlock?> AvailableBlocks { get; private set; } = new List<AvailableBlock>();
+    public virtual ICollection<AvailableBlock?> AvailableBlocks { get; set; } = new List<AvailableBlock?>();
     protected Customer(){}
     private Customer(string name, string email, Cnpj cnpj, Phone phone)
     {
@@ -82,8 +82,22 @@ public class Customer
         return Result<Customer>.Success(this);
     }
 
+    #region Availability
+
     public Result<AvailableBlock> AddAvailableBlock(DateTime startDate, DateTime endDate)
     {
+        if (startDate == endDate)
+        {
+            return Result<AvailableBlock>.Failure(AvailableBlockErrors.LessThanOneMinute);
+        }
+        if (startDate < DateTime.Now)
+        {
+            return Result<AvailableBlock>.Failure(AvailableBlockErrors.StartDateInThePast);
+        }
+        if (!IsAvailableAt(startDate, endDate))
+        {
+            return Result<AvailableBlock>.Failure(AvailableBlockErrors.CustomerNotAvailable);
+        }
         var availability = AvailableBlock.Create(startDate, endDate, Id);
         if (availability.IsFailure)
         {
@@ -93,7 +107,7 @@ public class Customer
         return Result<AvailableBlock>.Success(availability.Value);
     }
 
-    public bool IsAvailableAt(DateTime startDate, DateTime endDate)
+    private bool IsAvailableAt(DateTime startDate, DateTime endDate)
     {
         if (!AvailableBlocks.Any())
         {
@@ -103,5 +117,6 @@ public class Customer
             .Any(x => x != null && startDate < x.EndDate && endDate > x.StartDate);
         return !isBlocked;
     }
-    public bool IsBlockedAt(DateTime startDate, DateTime endDate) => !IsAvailableAt(startDate, endDate);
+
+    #endregion
 }

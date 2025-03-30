@@ -7,9 +7,10 @@ using X.PagedList;
 
 namespace AgendaPro.Web.Services.Interfaces;
 
-public interface ICustomerService
+public interface ICustomerFacade
 {
     public Task<Result<Customer>> FindCustomer(Guid customerId);
+    public Task<Result<List<Customer>>> GetAllCustomers();
     public Task AddCustomer(Customer customer);
     public Task UpdateCustomer(Customer? customer);
     public IPagedList<CustomerModel> ReturnPaginatedViewModel(int pageIndex, int pageSize);

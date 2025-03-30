@@ -21,7 +21,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<IAvailableBlockRepository, AvailableBlockRepository>();
-builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<ICustomerFacade, CustomerFacade>();
+builder.Services.AddScoped<IScheduler, Scheduler>();
 
 var app = builder.Build();
 

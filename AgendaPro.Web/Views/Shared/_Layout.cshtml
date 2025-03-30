@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/AgendaPro.Web.styles.css" asp-append-version="true"/>
     <link rel="icon" type="image/x-icon" href="~/favicon.ico" />
+    <script src="https://kit.fontawesome.com/f89bc2c124.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <header>
@@ -22,10 +23,10 @@
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        <a class="nav-link" asp-area="" asp-controller="Customers" asp-action="Index">Customers</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        <a class="nav-link" asp-area="" asp-controller="Customers" asp-action="Scheduler">Schedule</a>
                     </li>
                 </ul>
                 <partial name="_LoginPartial"/>
@@ -35,7 +36,7 @@
 </header>
 <div class="container">
     <main role="main" class="pb-3">
-        <div class="container mt-3">
+        <div class="container my-3">
             @RenderBody()
         </div>
     </main>

@@ -1,0 +1,47 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model List<AgendaPro.Web.Models.Customer.CustomerForScheduleViewModel>?
+@{
+    ViewBag.Title = "Scheduler";
+    Layout = "_Layout";
+}
+@await Html.PartialAsync("_Toast")
+<div class="container d-flex justify-content-center align-items-center w-50">
+    <form class="form-signin" asp-action="Schedule" method="post">
+        <div class="text-center mb-4">
+            <h1 class="h3 mb-3 font-weight-normal">
+                <i class="fa-solid fa-calendar fa-xl" style="color: #74C0FC;"></i>
+                Schedule Manager
+            </h1>
+            <p>Check if the service is available and schedule.</p>
+        </div>
+        @if (Model != null)
+        {
+        <div class="form-label-group mb-2">
+            <label for="customer">Select the service</label>
+            <select id="customer" class="form-select">
+                @foreach (var customer in @Model)
+                {
+                    <option class="customerOption" data-id="@customer.Id">@customer.Name</option>
+                }
+            </select>
+            <div id="formDiv"></div>
+        </div>
+        }
+        else
+        {
+            <p>
+                No customer registered. Please 
+                <a asp-action="Index">add a new customer</a>
+                 to continue
+            </p>
+        }
+    </form>
+</div>
+<div class="container my-2">
+    <div id="calendar"></div>
+</div>
+@section Scripts
+{
+    @await Html.PartialAsync("_Calendar")
+    <script src="/js/Customers/Scheduler.js"></script>
+}

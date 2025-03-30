@@ -14,6 +14,14 @@ public class CustomerRepository : BaseRepository<Customer>, ICustomerRepository
     {
         return DbSet.ToList();
     }
+
+    public new async Task<Customer?> GetByIdAsync(Guid id)
+    {
+        return await DbSet
+            .Include(x => x.AvailableBlocks)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == id);
+    }
     public IQueryable<Customer> GetCustomersQueryable()
     {
         return DbSet.AsNoTracking();

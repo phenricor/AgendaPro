@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
+using System.Text.Json.Serialization;
 using AgendaPro.Domain.Shared;
 
 namespace AgendaPro.Domain.Entities;
@@ -12,8 +13,8 @@ public class AvailableBlock
     public DateTime EndDate { get; set; }
     public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
     public Guid CustomerId { get; set; }
+    [JsonIgnore]
     public Customer Customer { get; set; }
-
     protected AvailableBlock() { }
 
     private AvailableBlock(DateTime startDate, DateTime endDate, Guid customerId)
@@ -26,7 +27,7 @@ public class AvailableBlock
     {
         if (startDate > endDate)
         {
-            return Result<AvailableBlock>.Failure(AvailableBlockErrors.TimeSpanIsInvalid);
+            return Result<AvailableBlock>.Failure(AvailableBlockErrors.StartDateBeforeEndDate);
         }
         if (customerId == Guid.Empty)
         {
