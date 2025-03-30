@@ -36,13 +36,4 @@ public class AvailableBlock
         var block = new AvailableBlock(startDate, endDate, customerId);
         return Result<AvailableBlock>.Success(block);
     }
-
-    public bool IsAvailable(DateTime dateTime)
-    {
-        if (dateTime > StartDate && dateTime < EndDate)
-        {
-            return true;
-        }
-        return false;
-    }
 }
