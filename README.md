@@ -1,4 +1,7 @@
 **AgendaPro** is a simple personal project developed as a learning exercise to practice ASP.NET Core using layered architecture and Domain-Driven Design (DDD). The idea was based on a fictional demand for a project that I prompted ChatGPT for, along with its business rules. We then elaborated together to refine the concept and create a structured implementation plan.
+
+![image](https://github.com/user-attachments/assets/34790a26-94d4-4d5b-b773-bfe7620c97c4)
+
 # Features
 * CRUD operations for customers
 * Calendar for scheduling a service with a customer
